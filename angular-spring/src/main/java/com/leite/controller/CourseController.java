@@ -47,14 +47,26 @@ public class CourseController {
 		return courseRepository.save(course);
 	}
 	
-	@PutMapping
-	public Optional<Course> edit(@RequestBody Course course) {
-		return courseRepository.findById(course.getId());
-	}
+	@PutMapping("/{id}")
+	public ResponseEntity<Course> edit(@PathVariable Long id, @RequestBody Course course) {
+        return courseRepository.findById(id)
+                .map(recordFound -> {
+                    recordFound.setName(course.getName());
+                    recordFound.setCategory(course.getCategory());
+                    Course updated = courseRepository.save(recordFound);
+                    return ResponseEntity.ok().body(updated);
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
 	
-	@DeleteMapping
-	public void delete(Course course) {
-		courseRepository.delete(course);;
-	}
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
+        return courseRepository.findById(id)
+                .map(recordFound -> {
+                    courseRepository.deleteById(id);
+                    return ResponseEntity.noContent().<Void>build();
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
 	
 }
