@@ -1,8 +1,5 @@
-import { CampoCheck } from './../../model/campoCheck';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 
-import { PopUpTableComponent } from '../pop-up-table/pop-up-table.component';
 import { Course } from './../../model/course';
 
 @Component({
@@ -16,14 +13,10 @@ export class CoursesListComponent implements OnInit {
   @Output() add = new EventEmitter(false)
   @Output() edit = new EventEmitter(false)
   @Output() delete = new EventEmitter(false)
-  @Output() editForm = new EventEmitter(false)
 
   readonly displayedColumns = ['name', 'category', 'actions'];
 
-  constructor(private dialog: MatDialog,
-    private check: CampoCheck) { }
-
-  check
+  constructor() { }
 
   ngOnInit(): void {
   }
@@ -38,17 +31,5 @@ export class CoursesListComponent implements OnInit {
 
   onDelete(course: Course){
     this.delete.emit(course)
-  }
-
-  onEditColumn(){
-    let popup = this.dialog.open(PopUpTableComponent, {
-      width: '445px', height: 'auto',
-      data: {name: check.name, category: check.category, id: check.id}
-    });
-
-    popup.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
-
   }
 }
